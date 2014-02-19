@@ -9,13 +9,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -108,53 +105,49 @@ class ReservationNotificationWebsocketController {
     private SimpMessageSendingOperations messagingTemplate;
     private ReservationRepository reservationRepository;
     private TaskScheduler taskScheduler;
-    private String notificationsDestination = "/app/notifications";
 
     protected void schedule(List<Reservation> res) {
         for (final Reservation r : res) {
-
-            this.taskScheduler.schedule(new Runnable() {
-                @Override
-                public void run() {
-                    triggerReservationNotification(r);
-                }
-            }, r.getDateAndTime());
+            this.taskScheduler.schedule(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            triggerReservationNotification(r);
+                        }
+                    }, r.getDateAndTime());
         }
     }
 
-    @SubscribeMapping("/notifications")
-    List<Reservation> reservations() throws Exception {
-        return this.reservationRepository.findAll();
+    protected void triggerReservationNotification(Reservation reservation) {
+        System.out.println(reservation.toString());
+        messagingTemplate.convertAndSend("/topic/alarms", reservation);
     }
 
+
+ /*   @SubscribeMapping("/notifications")
+    List<Reservation> reservations() throws Exception {
+        return this.reservationRepository.findAll();
+    }*/
 
     @Autowired
     ReservationNotificationWebsocketController(
             @Qualifier("reservationPool") TaskScheduler taskScheduler,
-            ReservationRepository reservationRepository,
+            final ReservationRepository reservationRepository,
             SimpMessageSendingOperations messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
-        this.taskScheduler = new ThreadPoolTaskScheduler();
+        this.taskScheduler = (taskScheduler);
         this.reservationRepository = reservationRepository;
-     this.schedule(this.reservationRepository.findAll());
+
+        taskScheduler.schedule(new Runnable() {
+            @Override
+            public void run() {
+                schedule(reservationRepository.findAll());
+            }
+        }, new Date(System.currentTimeMillis() + (15 * 1000)));
+
     }
 
-    protected void triggerReservationNotification(Reservation reservation) {
-        System.out.println( reservation.toString());
-        messagingTemplate.convertAndSend( "/topic/alarms",reservation);
 
-    }
-
-    @Scheduled(fixedDelay = 10000)
-    void runEveryTenSeconds() {
-
-        Reservation reservation = new Reservation();
-        reservation.setDateAndTime(new Date(System.currentTimeMillis()));
-        reservation.setFamilyName(Math.random() > .5 ? "Longs" : "Changs");
-        reservation.setGroupSize(2);
-        reservation.setId((long) Math.round(100));
-        triggerReservationNotification(reservation);
-    }
 }
 
 @Controller
