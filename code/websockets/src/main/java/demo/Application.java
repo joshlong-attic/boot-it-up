@@ -1,14 +1,24 @@
 package demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.messaging.converter.MessageConverter;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,10 +63,33 @@ class ReservationRestController {
     }
 }
 
+/*
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/portfolio").withSockJS();
+	}
 
- @Configuration
-@EnableWebSocketMessageBroker 
-class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
+	@Override
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+	}
+
+	@Override
+	public void configureClientOutboundChannel(ChannelRegistration registration) {
+		registration.taskExecutor().corePoolSize(4).maxPoolSize(10);
+	}
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/queue/", "/topic/");
+//		registry.enableStompBrokerRelay("/queue/", "/topic/");
+		registry.setApplicationDestinationPrefixes("/app");
+	}
+*/
+
+@EnableScheduling
+@Configuration
+@EnableWebSocketMessageBroker
+class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer, SchedulingConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -66,7 +99,7 @@ class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/hello").withSockJS();
+        registry.addEndpoint("/notifications").withSockJS();
     }
 
     @Override
@@ -82,6 +115,63 @@ class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
         return true;
     }
 
+    @Bean
+    ThreadPoolTaskScheduler reservationPool() {
+        return new ThreadPoolTaskScheduler();
+    }
+
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        taskRegistrar.setTaskScheduler(this.reservationPool());
+    }
+}
+
+@Controller
+class ReservationNotificationWebsocketController {
+
+    private SimpMessageSendingOperations messagingTemplate;
+    private ReservationRepository reservationRepository;
+    private TaskScheduler taskScheduler;
+    private String notificationsDestination = "/topic/notifications";
+
+    protected void schedule(List<Reservation> res) {
+        for (final Reservation r : res) {
+
+            this.taskScheduler.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    triggerReservationNotification(r);
+                }
+            }, r.getDateAndTime());
+        }
+    }
+
+    @Autowired
+    ReservationNotificationWebsocketController(
+            @Qualifier("reservationPool") TaskScheduler taskScheduler,
+            ReservationRepository reservationRepository,
+            SimpMessageSendingOperations messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+        this.taskScheduler = new ThreadPoolTaskScheduler();
+        this.reservationRepository = reservationRepository;
+    //    this.schedule(this.reservationRepository.findAll());
+    }
+
+    protected void triggerReservationNotification(Reservation reservation) {
+        messagingTemplate.send(
+                this.notificationsDestination, MessageBuilder.withPayload(reservation).build());
+    }
+
+    @Scheduled(fixedDelay = 10000)
+    public void runEveryTenSeconds() {
+
+        Reservation reservation = new Reservation();
+        reservation.setDateAndTime(new Date(System.currentTimeMillis()));
+        reservation.setFamilyName(Math.random() > .5 ? "Longs" : "Changs");
+        reservation.setGroupSize(2);
+        reservation.setId((long) Math.round(100));
+        triggerReservationNotification(reservation);
+    }
 }
 
 @Controller
