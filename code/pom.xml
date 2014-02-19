@@ -26,15 +26,36 @@
         <module>views-1</module>
         <module>views-2</module>
         <module>views-3</module>
-				
-				<module>testing</module>
 
+        <module>testing</module>
 
     </modules>
 
     <dependencyManagement>
         <dependencies>
 
+
+            <dependency>
+                <groupId>com.googlecode.flyway</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>2.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-core</artifactId>
+                <version>1.7.3</version>
+            </dependency>
+            <dependency>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-extensions</artifactId>
+                <version>1.7.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>1.5.0</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>jquery</artifactId>
