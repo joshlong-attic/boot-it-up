@@ -18,8 +18,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.O
 import org.springframework.security.oauth2.config.annotation.web.configurers.OAuth2ServerConfigurer;
 import org.springframework.security.oauth2.provider.token.InMemoryTokenStore;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,7 +76,7 @@ class WebSecurityConfig extends OAuth2ServerConfigurerAdapter {
                 .userDetailsService(new InMemoryUserDetailsManager( userDetails ))
                 .and()
                     .apply(new InMemoryClientDetailsServiceConfigurer())
-                    .withClient("angular-client")
+                    .withClient("ios-client")
                     .resourceIds(applicationName)
                     .scopes("read", "write")
                     .authorities("USER")
