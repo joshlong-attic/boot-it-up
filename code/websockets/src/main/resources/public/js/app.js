@@ -23,13 +23,12 @@ function ReservationController($scope, $http) {
         var client = Stomp.over(socket);
 
 
-        client.connect('', '', function (frame) {
+        client.connect( {}, function (frame) {
             console.log('Connected ' + frame);
             var username = frame.headers['user-name'];
-            client.subscribe("/topic" + notifications, function (message) {
+            client.subscribe("/topic/alarms"  , function (message) {
                 $scope.alarm(JSON.parse(message.body));
             });
-
         }, function (error) {
             console.log("STOMP protocol error " + error);
         });
@@ -46,9 +45,4 @@ function ReservationController($scope, $http) {
 
 }
 
-
-/**
- new feature : websockets can be used to trigger the notification on the client
- */
-
-// websocket client stolen from Rossen stoyanchev
+ 
