@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+
+        /* these all must be contained w/in */
+        .familyName,
+        .groupSize,
+        .dateAndTime,
+        .id,
+        .column {
+            display: inline-block;
+            margin-right: 10px;
+            width: 100px;
+        }
+
+        .reservations-header .id,
+        .reservations-header .dateAndTime,
+        .reservations-header .groupSize,
+        .reservations-header .familyName {
+            color: dodgerblue;
+        }
+
+        .id {
+            width: 50px;
+            font-weight: bold;
+            color: lightslategray;
+        }
+
+         .dateAndTime {
+            width: 200px;;
+        }
+    </style>
+</head>
+<body>
+
+<H1> Reservations</H1>
+
+<div class="reservations-header">
+    <span class="id">ID</span>
+    <span class="familyName">Family Name</span>
+    <span class="dateAndTime">When</span>
+    <span class="groupSize">Group Count</span>
+</div>
+<div class="reservations-rows" th:each="r : ${reservations}">
+
+    <div>
+        <span class="id" th:text="${r.id}">ID</span>
+        <span class="familyName" th:text="${r.familyName}">Family Name</span>
+        <span class="dateAndTime" th:text="${r.dateAndTime}">12/22/2014</span>
+        <span class="groupSize" th:text="${r.groupSize}">3</span>
+    </div>
+</div>
+
+</body>
+</html>
