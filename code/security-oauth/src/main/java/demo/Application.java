@@ -89,7 +89,9 @@ class WebSecurityConfig extends OAuth2ServerConfigurerAdapter {
 
 }
 
+
 interface ReservationRepository extends JpaRepository<Reservation, Long> {
+    List<Reservation> findByFamilyName(String familyName);
 }
 
 @RestController

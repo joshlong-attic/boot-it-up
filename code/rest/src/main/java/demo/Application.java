@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @ComponentScan
 @EnableAutoConfiguration
@@ -25,7 +26,9 @@ public class Application {
     }
 }
 
+
 interface ReservationRepository extends JpaRepository<Reservation, Long> {
+    List<Reservation> findByFamilyName(String familyName);
 }
 
 @RestController
