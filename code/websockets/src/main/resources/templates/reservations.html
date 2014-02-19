@@ -1,49 +1,20 @@
-<!DOCTYPE HTML>
-<html ng-app="reservations" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/standard">
 <head>
-    <title>Getting Started: Serving Web Content</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="webjars/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <title>
+        Reservations
+    </title>
 
-    <style type="text/css">
-
-        /* these all must be contained w/in */
-        .familyName,
-        .groupSize,
-        .dateAndTime,
-        .id,
-        .column {
-            display: inline-block;
-            margin-right: 10px;
-            width: 100px;
-        }
-
-        .reservations-header .id,
-        .reservations-header .dateAndTime,
-        .reservations-header .groupSize,
-        .reservations-header .familyName {
-            color: dodgerblue;
-        }
-
-        .id {
-            width: 50px;
-            font-weight: bold;
-            color: lightslategray;
-        }
-
-        .dateAndTime {
-            width: 200px;;
-        }
-
-
-    </style>
 </head>
-<body class="container">
+<body>
 
-<div class="container">
+<h1> You shouldn't see this!</h1>
 
-    <div ng-controller="ReservationController">
+
+
+    <div layout:fragment="content" ng-controller="ReservationController">
 
         <H1> Reservations</H1>
 
@@ -63,17 +34,10 @@
             </div>
         </div>
     </div>
+
+<div layout:fragment="scripts">
+    <script src="js/app.js"></script>
 </div>
-
-
-<script src="webjars/jquery/2.0.3/jquery.js"></script>
-<script src="webjars/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-<script src="webjars/angularjs/1.2.3/angular.js"></script>
-<script src="webjars/angularjs/1.2.3/angular-resource.js"></script>
-<script src="webjars/angularjs/1.2.3/angular-route.js"></script>
-<script src="webjars/angularjs/1.2.3/angular-cookies.js"></script>
-<script src="js/app.js"></script>
-
 
 </body>
 </html>

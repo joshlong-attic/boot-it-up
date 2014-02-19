@@ -29,6 +29,7 @@ public class Application {
     }
 }
 
+
 interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByFamilyName(String familyName);
 }
