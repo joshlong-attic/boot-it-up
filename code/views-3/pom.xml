@@ -10,7 +10,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>views-2</artifactId>
+    <artifactId>views-3</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.thymeleaf</groupId>

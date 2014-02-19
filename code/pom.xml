@@ -15,12 +15,20 @@
 
     <modules>
 
-        <module>security-ssl</module>
         <module>db-access</module>
-        <module>views-1</module>
         <module>rest</module>
-        <module>views-2</module>
+
+        <module>security-ssl</module>
         <module>security-oauth</module>
+
+        <module>websockets</module>
+
+        <module>views-1</module>
+        <module>views-2</module>
+        <module>views-3</module>
+				
+				<module>testing</module>
+
 
     </modules>
 
