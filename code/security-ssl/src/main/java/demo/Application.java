@@ -12,9 +12,9 @@ import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomize
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +23,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -38,10 +37,9 @@ public class Application {
     }
 
     @Bean
-    public EmbeddedServletContainerCustomizer containerCustomizer(@Value("${keystore.file}") final String keystoreFile,
-                                                                  @Value("${keystore.pass}") final String keystorePass) throws FileNotFoundException {
-        final String absoluteKeystoreFile = ResourceUtils.getFile(keystoreFile).getAbsolutePath();
-
+    public EmbeddedServletContainerCustomizer containerCustomizer(@Value("${keystore.file}") final Resource keystoreFile,
+                                                                  @Value("${keystore.pass}") final String keystorePass) throws Exception {
+        final String absoluteKeystoreFile = keystoreFile.getFile().getAbsolutePath();
         return new EmbeddedServletContainerCustomizer() {
             @Override
             public void customize(ConfigurableEmbeddedServletContainerFactory factory) {

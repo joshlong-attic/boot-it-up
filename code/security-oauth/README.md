@@ -3,7 +3,7 @@
 Request OAuth authorization:
 
 ```sh
- curl -X POST -vu angular-client:123456 http://localhost:8080/oauth/token -H "Accept: application/json" -d "password=password&username=user1&grant_type=password&scope=read%2Cwrite&client_secret=123456&client_id=angular-client"
+ curl -X POST -vu my-client:123456 http://localhost:8080/oauth/token -H "Accept: application/json" -d "password=password&username=user1&grant_type=password&scope=read%2Cwrite&client_secret=123456&client_id=my-client"
 ```
 
 A successful authorization results in the following response:

@@ -76,7 +76,7 @@ class WebSecurityConfig extends OAuth2ServerConfigurerAdapter {
                 .userDetailsService(new InMemoryUserDetailsManager( userDetails ))
                 .and()
                     .apply(new InMemoryClientDetailsServiceConfigurer())
-                    .withClient("ios-client")
+                    .withClient("my-client")
                     .resourceIds(applicationName)
                     .scopes("read", "write")
                     .authorities("USER")
