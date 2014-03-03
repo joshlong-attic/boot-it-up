@@ -71,10 +71,7 @@ public class ReservationRepositoryTests {
     }
 
     protected Reservation reservation(String familyName, Date date, int s) {
-        Reservation reservation = new Reservation();
-        reservation.setGroupSize(s);
-        reservation.setFamilyName(familyName);
-        reservation.setDateAndTime(date);
+        Reservation reservation = new Reservation(s, date, familyName);
         this.reservationRepository.save(reservation);
         return reservation;
     }

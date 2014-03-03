@@ -47,16 +47,18 @@ class ReservationRestController {
 @Entity
 class Reservation {
 
-    @Column(name = "group_size")
-    private int groupSize = 1;
-
-    @Column(name = "date_and_time")
-    private Date dateAndTime;
-
     @Id
-    @Column(name = "id")
     @GeneratedValue
     private Long id;
+    private int groupSize = 1;
+    private Date dateAndTime;
+    private String familyName;
+
+    Reservation(int groupSize, Date dateAndTime, String familyName) {
+        this.groupSize = groupSize;
+        this.dateAndTime = dateAndTime;
+        this.familyName = familyName;
+    }
 
     @Override
     public String toString() {
@@ -68,38 +70,20 @@ class Reservation {
                 '}';
     }
 
-    @Column(name = "family_name")
-    private String familyName;
-
     public int getGroupSize() {
         return groupSize;
-    }
-
-    public void setGroupSize(int groupSize) {
-        this.groupSize = groupSize;
     }
 
     public Date getDateAndTime() {
         return dateAndTime;
     }
 
-    public void setDateAndTime(Date dateAndTime) {
-        this.dateAndTime = dateAndTime;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFamilyName() {
         return familyName;
     }
 
-    public void setFamilyName(String familyName) {
-        this.familyName = familyName;
-    }
 }
