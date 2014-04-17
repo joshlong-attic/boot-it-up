@@ -25,7 +25,6 @@ import org.springframework.web.socket.config.annotation.AbstractWebSocketMessage
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -107,13 +106,11 @@ class ReservationNotificationWebsocketController {
     private TaskScheduler taskScheduler;
 
     protected void schedule(List<Reservation> res) {
-        for (final Reservation r : res) {
+        for (  Reservation r : res) {
+
             this.taskScheduler.schedule(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            triggerReservationNotification(r);
-                        }
+                    () -> {
+                        triggerReservationNotification(r);
                     }, r.getDateAndTime());
         }
     }

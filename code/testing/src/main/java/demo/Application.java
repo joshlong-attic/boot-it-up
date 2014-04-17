@@ -46,6 +46,8 @@ class ReservationRestController {
 
 @Entity
 class Reservation {
+    Reservation() {
+    }
 
     @Id
     @GeneratedValue

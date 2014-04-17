@@ -2,7 +2,7 @@ var xAuthTokenHeaderName = 'x-auth-token';
 
 angular.module('reservations', ['ngRoute', 'ngResource' , 'ngCookies'   ])
     .run(function ($rootScope, $http, $location, $cookieStore) {
-
+        // setup code
     });
 
 

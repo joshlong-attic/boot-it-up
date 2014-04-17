@@ -1,14 +1,12 @@
 package demo;
 
-import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -37,18 +34,14 @@ public class Application {
     }
 
     @Bean
-    public EmbeddedServletContainerCustomizer containerCustomizer(@Value("${keystore.file}") final Resource keystoreFile,
-                                                                  @Value("${keystore.pass}") final String keystorePass) throws Exception {
-        final String absoluteKeystoreFile = keystoreFile.getFile().getAbsolutePath();
-        return new EmbeddedServletContainerCustomizer() {
-            @Override
-            public void customize(ConfigurableEmbeddedServletContainerFactory factory) {
-                if (factory instanceof TomcatEmbeddedServletContainerFactory) {
-                    TomcatEmbeddedServletContainerFactory containerFactory =
-                            (TomcatEmbeddedServletContainerFactory) factory;
-                    containerFactory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
-                        @Override
-                        public void customize(Connector connector) {
+    public EmbeddedServletContainerCustomizer containerCustomizer(@Value("${keystore.file}") Resource keystoreFile,
+                                                                  @Value("${keystore.pass}") String keystorePass) throws Exception {
+        String absoluteKeystoreFile = keystoreFile.getFile().getAbsolutePath();
+        return (ConfigurableEmbeddedServletContainer container) -> {
+            if (container instanceof TomcatEmbeddedServletContainerFactory) {
+                TomcatEmbeddedServletContainerFactory tomcat = (TomcatEmbeddedServletContainerFactory) container;
+                tomcat.addConnectorCustomizers(
+                        (connector) -> {
                             connector.setPort(8443);
                             connector.setSecure(true);
                             connector.setScheme("https");
@@ -59,8 +52,7 @@ public class Application {
                             proto.setKeystoreType("PKCS12");
                             proto.setKeyAlias("tomcat");
                         }
-                    });
-                }
+                );
             }
         };
     }
