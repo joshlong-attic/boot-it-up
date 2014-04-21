@@ -28,6 +28,8 @@
         <module>views-3</module>
 
         <module>testing</module>
+				
+				<module>batch</module>
 
     </modules>
 
