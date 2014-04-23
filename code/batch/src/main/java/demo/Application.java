@@ -32,6 +32,7 @@ import java.util.List;
  * This example is based on example in https://github.com/briansjavablog/spring-batch-tutorial.git,
  * but uses the Spring Batch Java Configuration API and Spring Boot and Java 8.
  *
+ * @author Brian Hannaway <hannawaybrian@googlemail.com> 
  * @author Josh Long
  */
 @Configuration
