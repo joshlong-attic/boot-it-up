@@ -10,6 +10,7 @@ import org.springframework.jms.core.JmsTemplate;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
