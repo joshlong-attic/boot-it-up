@@ -2,14 +2,15 @@ package demo;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
 @SpringBootApplication
 public class Application {
 
-    @Named
+    @Component
     public static class JerseyConfig extends ResourceConfig {
 
         public JerseyConfig() {
@@ -32,7 +33,7 @@ public class Application {
         }
     }
 
-    @Named
+    @Component
     @Transactional
     public static class GreetingService {
 
@@ -65,16 +66,13 @@ public class Application {
         }
     }
 
-    @Named
-    @Path("/hello/{id}")
+    @Component
+    @Path("/hello")
     @Produces({MediaType.APPLICATION_JSON})
     public static class GreetingEndpoint {
 
-        @Inject
+        @Autowired
         private GreetingService greetingService;
-
-        @PersistenceContext
-        private EntityManager entityManager;
 
         @POST
         public void post(@QueryParam("name") String name) {
@@ -82,8 +80,9 @@ public class Application {
         }
 
         @GET
-        public Greeting get(@PathParam("id") Long id) {
-            return this.entityManager.find(Greeting.class, id);
+        @Path("/{id}")
+        public Greeting get(@PathParam("id") String id) {
+            return this.greetingService.find(Long.parseLong(id));
         }
     }
 
