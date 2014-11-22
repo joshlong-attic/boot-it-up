@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -35,10 +36,8 @@ import java.util.List;
  * @author Brian Hannaway <hannawaybrian@googlemail.com> 
  * @author Josh Long
  */
-@Configuration
-@ComponentScan
+@SpringBootApplication
 @EnableBatchProcessing
-@EnableAutoConfiguration
 public class Application {
 
     public static void main(String[] args) {
@@ -96,8 +95,8 @@ public class Application {
     @Bean
     ItemWriter<Account> accountItemWriter(JdbcTemplate jdbcTemplate) {
         return (List<? extends Account> accounts) -> {
-            String insertAccount = "insert into account (id, accountHolderName, accountCurrency, balance) values(?,?,?,?)";
-            String updateAccount = "update account set accountHolderName=?, accountCurrency=?, balance=? where id = ?";
+            String insertAccount = "insert into account (ACCOUNT_ID, ACCOUNT_HOLDER_NAME, ACCOUNT_CURRENCY, BALANCE) values(?,?,?,?)";
+            String updateAccount = "update account set ACCOUNT_HOLDER_NAME=?, ACCOUNT_CURRENCY=?, BALANCE=? where id = ?";
             accounts.forEach(a -> {
                 int updated = jdbcTemplate.update(updateAccount, a.getAccountHolderName(), a.getAccountCurrency(), a.getBalance(), a.getId());
                 if (updated == 0) {

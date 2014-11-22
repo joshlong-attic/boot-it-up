@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.0.1.RELEASE</version>
+        <version>1.2.0.RC1</version>
     </parent>
 
     <groupId>org.demo</groupId>
@@ -15,8 +15,7 @@
 
     <modules>
 
-        <module>db-access</module>
-        <module>rest</module>
+         <module>rest</module>
 
         <module>security-ssl</module>
         <module>security-oauth</module>
@@ -28,9 +27,11 @@
         <module>views-3</module>
 
         <module>testing</module>
-				
-				<module>batch</module>
 
+        <module>batch</module>
+        <module>db-access</module>
+
+        <module>ee</module>
     </modules>
 
     <dependencyManagement>
