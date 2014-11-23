@@ -56,8 +56,8 @@ public class Application {
         }
 
         public Collection<Greeting> findAll() {
-            return this.entityManager.createQuery("select g from " + Greeting.class.getName() +
-                    " g", Greeting.class)
+            return this.entityManager
+                    .createQuery("select g from " + Greeting.class.getName() + " g", Greeting.class)
                     .getResultList();
         }
 
@@ -81,8 +81,8 @@ public class Application {
 
         @GET
         @Path("/{id}")
-        public Greeting get(@PathParam("id") String id) {
-            return this.greetingService.find(Long.parseLong(id));
+        public Greeting get(@PathParam("id") Long id) {
+            return this.greetingService.find(id);
         }
     }
 
